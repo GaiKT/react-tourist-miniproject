@@ -1,20 +1,42 @@
-import React from 'react'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faCopy } from '@fortawesome/free-solid-svg-icons'
+import { Carousel } from "flowbite-react";
 
-export default function Card() {
+export default function Card({trip , getKeyword}) {
   return (
-    <div className="h-80 rounded-lg bg-emerald-900 bg-opacity-90 p-4 flex gap-5">
-        <div className="rounded-lg w-1/3 bg-cover bg-[url('https://img.wongnai.com/p/1600x0/2019/10/10/3092e773cda34ca2a77373b82f7639b7.jpg')]">
+    <div className="rounded-lg bg-emerald-900 bg-opacity-90 p-2 flex max-md:flex-col gap-5 shadow-lg relative">
+        <div className="tooltip absolute top-0 right-0 p-4 text-blue-500 font-extrabold text-2xl z-10" data-tip="copy to Clipboard">
+          <button onClick={() => navigator.clipboard.writeText(trip.url)}> 
+            <FontAwesomeIcon icon={faCopy} />
+          </button>
         </div>
-        <div className="w-2/3 rounded-lg text-white font-serif text-lg flex flex-col justify-around">
-            <h1 className="text-2xl font-semibold">ทริปที่เที่ยวและร้านกาแฟเชียงใหม่ ที่สวยได้แบบไม่ต้องไปไกลถึงเกาหลี</h1>
-            <p className="px-5">แวะคาเฟ่เชียงใหม่! เที่ยวสไตล์เกาหลีแบบไม่ต้องไปไกล หมุนตัวสูดรับอากาศบริสุทธิ์ท่ามกลางดอกหญ้าแห้ง อยู่ร้านกาแฟเชียงใหม่ให้เหมือนอยู่ในโซล</p>
-            <div className="flex w-full gap-2 px-5 items-center"> 
-                Categrories :
-                <div className="flex gap-1 items-center">
-                    <span className="p-1 rounded bg-black">ทริปกิน</span>
-                    <span className="p-1 rounded bg-black">ทริปต่างระเทศ</span>
-                    และ
-                    <span className="p-1 rounded bg-black">ทริปทริปเอเชีย</span>
+        <div className='w-2/4 max-md:w-full h-80 overflow-hidden rounded-lg max-md:mt-4'>
+            <Carousel indicators={false} draggable={false}>
+              {
+                trip.photos.map((img , index) => {
+                  return <img key={index} src={img} />
+                })
+              } 
+            </Carousel>
+        </div>
+        <div className="w-2/3 max-md:w-full max-md:text-center rounded-lg text-white font-serif text-lg flex flex-col justify-around">
+            <h1 className="text-2xl font-semibold">{trip.title}</h1>
+            <p className="px-5">{trip.description.slice(0,100)} <a href={trip.url} target="_blank" className='text-blue-600 underline'>อ่านต่อ</a></p>
+            <div className="flex w-full gap-2 px-5 items-center max-md:flex-col "> 
+                <span className=' w-28'>Categrories :</span>
+                <div className="flex gap-1 items-center flex-wrap">
+                    {
+                      trip.tags.map((tag , index)=>{
+                          if (index === trip.tags.length - 1) {
+                            return <>
+                                    <span>และ</span>
+                                    <a className="p-1 rounded bg-black cursor-pointer" onClick={()=>getKeyword(tag)} >{tag}</a>
+                                  </>
+                          } else {
+                            return <a className="p-1 rounded bg-black cursor-pointer" onClick={()=>getKeyword(tag)} >{tag}</a>
+                        }
+                      })
+                    }
                 </div>
             </div>
         </div>
